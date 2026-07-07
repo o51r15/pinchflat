@@ -39,20 +39,10 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
   end
 
   def delete(conn, %{"id" => id} = params) do
-    prevent_download = Map.get(params, "prevent_download", false)
+    # F5: normalize string param to boolean — query params arrive as strings, not booleans
+    prevent_download = Map.get(params, "prevent_download", "") == "true"
     media_item = Media.get_media_item!(id)
-
-    # When prevent_download is explicitly requested by the user (via the UI), record that
-    # the reason is a manual action so "blocked by user" is distinguishable from
-    # "permanently failed" or "blocked by availability policy".
-    addl_attrs =
-      if prevent_download do
-        %{prevent_download: true, download_prevented_reason: "manual"}
-      else
-        %{prevent_download: false}
-      end
-
-    {:ok, _} = Media.delete_media_files(media_item, addl_attrs)
+    {:ok, _} = Media.delete_media_files(media_item, %{prevent_download: prevent_download})
 
     conn
     |> put_flash(:info, "Files deleted successfully.")
@@ -86,6 +76,11 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
       file_size = File.stat!(media_item.media_filepath).size
       mime_type = MIME.from_path(media_item.media_filepath)
 
+      # S1: strip CR/LF from title before embedding in response header.
+      # media_item.title comes from yt-dlp metadata (untrusted); a title containing
+      # \r\n would allow CRLF injection into response headers on this unauthenticated endpoint.
+      safe_title = String.replace(media_item.title, ~r/[\r\n]/, " ")
+
       case parse_range(conn, file_size) do
         {:ok, {start_pos, end_pos}} ->
           Logger.debug("Streaming media item: #{media_item.uuid} from #{start_pos} to #{end_pos}")
@@ -94,9 +89,10 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
           conn
           |> put_resp_content_type(mime_type)
           |> put_resp_header("accept-ranges", "bytes")
+
           |> put_resp_header("content-range", "bytes #{start_pos}-#{end_pos}/#{file_size}")
           |> put_resp_header("content-length", to_string(length))
-          |> put_resp_header("content-disposition", "inline; filename=\"#{media_item.title}\"")
+          |> put_resp_header("content-disposition", "inline; filename=\"#{safe_title}\"")
           |> send_file(206, media_item.media_filepath, start_pos, length)
 
         {:error, :invalid_range} ->
@@ -107,7 +103,7 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
           |> put_resp_header("accept-ranges", "bytes")
           |> put_resp_header("content-range", "bytes 0-#{file_size - 1}/#{file_size}")
           |> put_resp_header("content-length", to_string(file_size))
-          |> put_resp_header("content-disposition", "inline; filename=\"#{media_item.title}\"")
+          |> put_resp_header("content-disposition", "inline; filename=\"#{safe_title}\"")
           |> send_file(200, media_item.media_filepath)
       end
     else
@@ -139,6 +135,12 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
 
       {{start_pos, _}, {end_pos, _}} ->
         {:ok, {start_pos, end_pos}}
+
+      # B2: catch-all for any unmatched combination (e.g. non-numeric start with numeric end).
+      # Without this, Integer.parse returning {:error, {n, ""}} raises CaseClauseError
+      # on this unauthenticated public endpoint.
+      _ ->
+        {:error, :invalid_range}
     end
   end
 end
