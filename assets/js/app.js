@@ -109,7 +109,7 @@ liveSocket.connect()
 // Server-pushed tab switching. The LiveView can call:
 //   push_event(socket, "switch-tab", %{tab: "active-tasks"})
 // and this handler will switch the visible tab without a page reload.
-window.addEventListener("phx:switch-tab", (e) => {
+window.addEventListener('phx:switch-tab', (e) => {
   if (e.detail && e.detail.tab) {
     window.setTabByName(e.detail.tab)
   }

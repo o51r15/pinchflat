@@ -7,12 +7,12 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: pinchflat
-      POSTGRES_PASSWORD: changeme          # <-- change this (must match DATABASE_URL below)
+      POSTGRES_PASSWORD: changeme # <-- change this (must match DATABASE_URL below)
       POSTGRES_DB: pinchflat
     volumes:
       - pinchfork_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pinchflat"]
+      test: ['CMD-SHELL', 'pg_isready -U pinchflat']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,10 +36,10 @@ services:
       # - BASIC_AUTH_USERNAME=admin
       # - BASIC_AUTH_PASSWORD=secret
     ports:
-      - "8946:8945"
+      - '8946:8945'
     volumes:
       - /home/o51r15/docker/pinchfork:/config
-      - "/mnt/otherpool/Shares/Server Media/Pinchfork:/downloads"
+      - '/mnt/otherpool/Shares/Server Media/Pinchfork:/downloads'
     deploy:
       resources:
         limits:

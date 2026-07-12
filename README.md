@@ -96,7 +96,7 @@ services:
     volumes:
       - pinchflat_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pinchflat"]
+      test: ['CMD-SHELL', 'pg_isready -U pinchflat']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -120,7 +120,7 @@ services:
       - DATABASE_URL=ecto://pinchflat:your_password_here@pinchflat-db/pinchflat
       - POOL_SIZE=10
     ports:
-      - "8945:8945"
+      - '8945:8945'
     volumes:
       - /path/to/config:/config
       - /path/to/downloads:/downloads
@@ -141,22 +141,22 @@ Migrations run automatically at startup. The app will be available at `http://yo
 
 ### Environment Variables
 
-| Name | Required? | Default | Notes |
-| --- | --- | --- | --- |
-| `DATABASE_URL` | **Yes** | — | Postgres connection string: `ecto://user:pass@host/db` |
-| `TZ` | No | `UTC` | Must follow IANA TZ format |
-| `POOL_SIZE` | No | `10` | Postgres connection pool size |
-| `LOG_LEVEL` | No | `debug` | Can be set to `info` |
-| `UMASK` | No | `022` | Unraid users may want `000` |
-| `BASIC_AUTH_USERNAME` | No | — | Enables basic auth when both username and password are set |
-| `BASIC_AUTH_PASSWORD` | No | — | Enables basic auth when both username and password are set |
-| `EXPOSE_FEED_ENDPOINTS` | No | `false` | See RSS feed docs |
-| `ENABLE_IPV6` | No | `false` | Set to any non-blank value to enable |
-| `TZ_DATA_DIR` | No | `/etc/elixir_tzdata_data` | Container path for timezone database |
-| `BASE_ROUTE_PATH` | No | `/` | Base path for reverse proxy subdirectory deployments |
-| `YT_DLP_WORKER_CONCURRENCY` | No | `2` | yt-dlp workers per queue. Set to `1` if getting IP limited |
-| `YT_DLP_VERSION` | No | `stable` | yt-dlp update behavior: `stable`, `nightly`, `master`, `pinned`/`none` to disable, or a specific version like `2025.12.08` |
-| `ENABLE_PROMETHEUS` | No | `false` | Set to any non-blank value to enable |
+| Name                        | Required? | Default                   | Notes                                                                                                                      |
+| --------------------------- | --------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`              | **Yes**   | —                         | Postgres connection string: `ecto://user:pass@host/db`                                                                     |
+| `TZ`                        | No        | `UTC`                     | Must follow IANA TZ format                                                                                                 |
+| `POOL_SIZE`                 | No        | `10`                      | Postgres connection pool size                                                                                              |
+| `LOG_LEVEL`                 | No        | `debug`                   | Can be set to `info`                                                                                                       |
+| `UMASK`                     | No        | `022`                     | Unraid users may want `000`                                                                                                |
+| `BASIC_AUTH_USERNAME`       | No        | —                         | Enables basic auth when both username and password are set                                                                 |
+| `BASIC_AUTH_PASSWORD`       | No        | —                         | Enables basic auth when both username and password are set                                                                 |
+| `EXPOSE_FEED_ENDPOINTS`     | No        | `false`                   | See RSS feed docs                                                                                                          |
+| `ENABLE_IPV6`               | No        | `false`                   | Set to any non-blank value to enable                                                                                       |
+| `TZ_DATA_DIR`               | No        | `/etc/elixir_tzdata_data` | Container path for timezone database                                                                                       |
+| `BASE_ROUTE_PATH`           | No        | `/`                       | Base path for reverse proxy subdirectory deployments                                                                       |
+| `YT_DLP_WORKER_CONCURRENCY` | No        | `2`                       | yt-dlp workers per queue. Set to `1` if getting IP limited                                                                 |
+| `YT_DLP_VERSION`            | No        | `stable`                  | yt-dlp update behavior: `stable`, `nightly`, `master`, `pinned`/`none` to disable, or a specific version like `2025.12.08` |
+| `ENABLE_PROMETHEUS`         | No        | `false`                   | Set to any non-blank value to enable                                                                                       |
 
 ### Reverse Proxies
 

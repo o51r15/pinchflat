@@ -24,11 +24,11 @@ defmodule PinchflatWeb.PageControllerTest do
       refute Settings.get!(:onboarding)
     end
 
-    test "displays the home page when not onboarding", %{conn: conn} do
+    test "redirects to the sources page when not onboarding", %{conn: conn} do
       Settings.set(onboarding: false)
 
       conn = get(conn, ~p"/")
-      assert html_response(conn, 200) =~ "MENU"
+      assert redirected_to(conn) == ~p"/sources"
     end
   end
 end
