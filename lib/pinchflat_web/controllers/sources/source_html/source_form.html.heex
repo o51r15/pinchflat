@@ -1,10 +1,4 @@
-<.simple_form
-  :let={f}
-  for={@changeset}
-  action={@action}
-  method={@method}
-  x-data="{ mediaProfileId: null }"
->
+<.simple_form :let={f} for={@changeset} action={@action} method={@method} x-data="{ mediaProfileId: null }">
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
@@ -37,7 +31,9 @@
         for={f[:original_url].id}
         class="mt-5 mb-2 inline-block text-md font-medium text-black dark:text-white"
         x-text="sourceType === 'playlist' ? 'Playlist URL' : sourceType === 'channel' ? 'Channel URL' : 'Source URL'"
-      >Source URL</label>
+      >
+        Source URL
+      </label>
       <.input
         field={f[:original_url]}
         type="text"
@@ -47,11 +43,7 @@
       />
     </section>
 
-    <.input
-      field={f[:custom_name]}
-      type="text"
-      label="Custom Name"
-    />
+    <.input field={f[:custom_name]} type="text" label="Custom Name" />
 
     <.input
       field={f[:media_profile_id]}
@@ -97,11 +89,7 @@
   <section class="mt-8">
     <h3 class="text-2xl text-black dark:text-white mb-4">Content</h3>
 
-    <.input
-      field={f[:download_media]}
-      type="toggle"
-      label="Download Media"
-    />
+    <.input field={f[:download_media]} type="toggle" label="Download Media" />
 
     <div class="mt-4 mb-2">
       <label class="mb-1 block text-sm font-medium text-black dark:text-white">Content Availability</label>
@@ -136,55 +124,34 @@
       </.input>
     </section>
 
-    <.input
-      field={f[:retention_period_days]}
-      type="number"
-      label="Retention Period (days)"
-      min="0"
-    />
+    <.input field={f[:retention_period_days]} type="number" label="Retention Period (days)" min="0" />
   </section>
 
   <%!-- COOKIES --%>
   <section class="mt-8">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-2xl text-black dark:text-white">Cookies</h3>
-      <.link href="https://github.com/o51r15/pinchfork/wiki/YouTube-Cookies" target="_blank" class="text-sm hover:underline">
+      <.link
+        href="https://github.com/o51r15/pinchfork/wiki/YouTube-Cookies"
+        target="_blank"
+        class="text-sm hover:underline"
+      >
         📖 Docs
       </.link>
     </div>
 
-    <.input
-      field={f[:cookie_behaviour]}
-      options={friendly_cookie_behaviours()}
-      type="select"
-      label="Cookie Behaviour"
-    />
+    <.input field={f[:cookie_behaviour]} options={friendly_cookie_behaviours()} type="select" label="Cookie Behaviour" />
   </section>
 
   <%!-- FILTERS --%>
   <section class="mt-8">
     <h3 class="text-2xl text-black dark:text-white mb-4">Filters</h3>
 
-    <.input
-      field={f[:min_duration_seconds]}
-      type="number"
-      label="Minimum Duration (seconds)"
-      min="0"
-    />
+    <.input field={f[:min_duration_seconds]} type="number" label="Minimum Duration (seconds)" min="0" />
 
-    <.input
-      field={f[:max_duration_seconds]}
-      type="number"
-      label="Maximum Duration (seconds)"
-      min="0"
-    />
+    <.input field={f[:max_duration_seconds]} type="number" label="Maximum Duration (seconds)" min="0" />
 
-    <.input
-      field={f[:title_filter_regex]}
-      type="text"
-      label="Title Filter Regex"
-      placeholder="(?i)^How to Bike$"
-    />
+    <.input field={f[:title_filter_regex]} type="text" label="Title Filter Regex" placeholder="(?i)^How to Bike$" />
   </section>
 
   <%!-- OUTPUT --%>
@@ -222,7 +189,11 @@
   <section class="mt-8">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-2xl text-black dark:text-white">Video Client</h3>
-      <.link href="https://github.com/o51r15/pinchfork/wiki/SABR-Bypass-and-PO-Tokens" target="_blank" class="text-sm hover:underline">
+      <.link
+        href="https://github.com/o51r15/pinchfork/wiki/SABR-Bypass-and-PO-Tokens"
+        target="_blank"
+        class="text-sm hover:underline"
+      >
         📖 Docs
       </.link>
     </div>
@@ -276,7 +247,9 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="font-medium text-white">Delete Source + Files</p>
-            <p class="text-sm text-gray-400">Removes this source and permanently deletes all downloaded files from disk.</p>
+            <p class="text-sm text-gray-400">
+              Removes this source and permanently deletes all downloaded files from disk.
+            </p>
           </div>
           <.link
             href={~p"/sources/#{@changeset.data}?delete_files=true"}

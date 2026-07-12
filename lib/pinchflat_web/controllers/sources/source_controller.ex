@@ -193,10 +193,19 @@ defmodule PinchflatWeb.Sources.SourceController do
           # Only count items the USER explicitly prevented — manual eye-off or user script.
           # Policy-stamped items (policy_members, policy_public, etc.) are system-driven and
           # belong in the skipped bucket, not here.
-          prevented: count(fragment("CASE WHEN ?::text IN ('manual', 'user_script') THEN 1 END", mi.download_prevented_reason)),
+          prevented:
+            count(fragment("CASE WHEN ?::text IN ('manual', 'user_script') THEN 1 END", mi.download_prevented_reason)),
           # Retrying items have a transient error but are not yet downloaded or prevented.
           # We track them so they can be subtracted when computing the skipped remainder.
-          retrying: count(fragment("CASE WHEN ?::text = 'transient' AND ? IS NULL AND ? = false THEN 1 END", mi.error_type, mi.media_filepath, mi.prevent_download))
+          retrying:
+            count(
+              fragment(
+                "CASE WHEN ?::text = 'transient' AND ? IS NULL AND ? = false THEN 1 END",
+                mi.error_type,
+                mi.media_filepath,
+                mi.prevent_download
+              )
+            )
         }
       )
       |> Repo.one()
@@ -347,6 +356,7 @@ defmodule PinchflatWeb.Sources.SourceController do
             {:ok, %{body: body}} ->
               File.write!(dest_path, body)
               {:ok, dest_path}
+
             _ ->
               {:error, "Could not fetch image from URL"}
           end

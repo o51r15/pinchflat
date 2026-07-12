@@ -2,14 +2,12 @@
   <h2 class="text-title-md2 font-bold text-white">Backup</h2>
   <.link href={~p"/system/backup"} method="post">
     <.button color="bg-primary" rounding="rounded-lg">
-      <.icon name="hero-archive-box-arrow-down" class="mr-2 h-4 w-4" />
-      Backup Now
+      <.icon name="hero-archive-box-arrow-down" class="mr-2 h-4 w-4" /> Backup Now
     </.button>
   </.link>
 </div>
 
 <div class="grid grid-cols-1 gap-6">
-
   <%!-- Backup list --%>
   <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
     <div class="px-6 py-4 border-b border-strokedark">
@@ -23,7 +21,9 @@
     <%= if @backups == [] do %>
       <div class="px-6 py-10 text-center">
         <.icon name="hero-archive-box" class="w-10 h-10 text-gray-600 mx-auto mb-3" />
-        <p class="text-sm text-gray-400">No backups yet. Click <strong class="text-gray-300">Backup Now</strong> to create one.</p>
+        <p class="text-sm text-gray-400">
+          No backups yet. Click <strong class="text-gray-300">Backup Now</strong> to create one.
+        </p>
       </div>
     <% else %>
       <div class="max-w-full overflow-x-auto">
@@ -101,5 +101,4 @@
       Scheduled backups are planned for a future release.
     </p>
   </div>
-
 </div>

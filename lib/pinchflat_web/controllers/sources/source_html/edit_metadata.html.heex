@@ -15,22 +15,21 @@
       x-on:click="tab = 'general'"
       x-bind:class="tab === 'general' ? 'border-b-2 border-primary text-primary' : 'text-gray-400 hover:text-white'"
       class="px-4 py-2 text-sm font-medium transition-colors"
-    >General</button>
+    >
+      General
+    </button>
     <button
       x-on:click="tab = 'poster'"
       x-bind:class="tab === 'poster' ? 'border-b-2 border-primary text-primary' : 'text-gray-400 hover:text-white'"
       class="px-4 py-2 text-sm font-medium transition-colors"
-    >Poster</button>
+    >
+      Poster
+    </button>
   </div>
 
   <%!-- GENERAL TAB --%>
   <div x-show="tab === 'general'">
-    <.simple_form
-      :let={f}
-      for={@changeset}
-      action={~p"/sources/#{@source}/edit_metadata"}
-      method="post"
-    >
+    <.simple_form :let={f} for={@changeset} action={~p"/sources/#{@source}/edit_metadata"} method="post">
       <.error :if={@changeset.action}>
         Oops, something went wrong! Please check the errors below.
       </.error>
@@ -71,15 +70,10 @@
 
   <%!-- POSTER TAB --%>
   <div x-show="tab === 'poster'" x-cloak>
-
     <%!-- Current poster --%>
     <div class="mb-6 flex items-start gap-6">
       <div class="w-32 rounded-lg overflow-hidden shadow-lg flex-shrink-0" style="aspect-ratio: 2/3;">
-        <img
-          src={~p"/sources/#{@source.id}/poster"}
-          alt={@source.custom_name}
-          class="w-full h-full object-cover"
-        />
+        <img src={~p"/sources/#{@source.id}/poster"} alt={@source.custom_name} class="w-full h-full object-cover" />
       </div>
       <div>
         <p class="text-white font-medium mb-1">Current Poster</p>
@@ -102,13 +96,7 @@
     <%!-- Upload form --%>
     <div class="border border-strokedark rounded-lg p-5 mb-4">
       <h3 class="text-white font-medium mb-4">Upload Image</h3>
-      <.form
-        :let={f}
-        for={%{}}
-        action={~p"/sources/#{@source}/custom_poster"}
-        method="post"
-        multipart={true}
-      >
+      <.form :let={f} for={%{}} action={~p"/sources/#{@source}/custom_poster"} method="post" multipart={true}>
         <.input field={f[:upload]} name="poster[upload]" type="file" label="Choose file" />
         <.button class="mt-4 w-full sm:w-auto" rounding="rounded-lg">Upload Poster</.button>
       </.form>
@@ -117,16 +105,10 @@
     <%!-- URL form --%>
     <div class="border border-strokedark rounded-lg p-5">
       <h3 class="text-white font-medium mb-4">Use Image URL</h3>
-      <.form
-        :let={f}
-        for={%{}}
-        action={~p"/sources/#{@source}/custom_poster"}
-        method="post"
-      >
+      <.form :let={f} for={%{}} action={~p"/sources/#{@source}/custom_poster"} method="post">
         <.input field={f[:url]} name="poster[url]" type="text" label="Image URL" placeholder="https://..." />
         <.button class="mt-4 w-full sm:w-auto" rounding="rounded-lg">Set from URL</.button>
       </.form>
     </div>
-
   </div>
 </div>

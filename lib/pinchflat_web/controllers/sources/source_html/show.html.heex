@@ -1,11 +1,7 @@
 <%!-- SONARR-STYLE HEADER: fanart banner + poster overlay + title --%>
 <div class="relative mb-4 rounded-lg overflow-hidden">
   <div class="h-48 md:h-64 w-full">
-    <img
-      src={~p"/sources/#{@source.id}/fanart"}
-      alt=""
-      class="w-full h-full object-cover"
-    />
+    <img src={~p"/sources/#{@source.id}/fanart"} alt="" class="w-full h-full object-cover" />
     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
   </div>
 
@@ -17,11 +13,7 @@
 
   <div class="absolute bottom-0 left-0 right-0 p-4 flex items-end gap-4">
     <div class="hidden sm:block flex-shrink-0 w-24 rounded-lg overflow-hidden shadow-2xl" style="aspect-ratio: 2/3;">
-      <img
-        src={~p"/sources/#{@source.id}/poster"}
-        alt={@source.custom_name}
-        class="w-full h-full object-cover"
-      />
+      <img src={~p"/sources/#{@source.id}/poster"} alt={@source.custom_name} class="w-full h-full object-cover" />
     </div>
     <div class="flex-1 min-w-0">
       <h2 class="text-2xl font-bold text-white truncate drop-shadow">{@source.custom_name}</h2>
@@ -34,7 +26,6 @@
 
 <%!-- SONARR-STYLE ACTION BAR — sits between banner and stats; all primary actions visible --%>
 <div class="flex items-center gap-1 flex-wrap border-b border-strokedark pb-3 mb-6">
-
   <%!-- Edit --%>
   <.link
     href={~p"/sources/#{@source}/edit"}
@@ -113,19 +104,14 @@
         Sync Files on Disk
       </.link>
       <div class="h-px w-full bg-strokedark my-1"></div>
-      <.link
-        href={rss_feed_url(@conn, @source)}
-        x-data="{ copied: false }"
-        x-on:click={~s"
+      <.link href={rss_feed_url(@conn, @source)} x-data="{ copied: false }" x-on:click={~s"
           $event.preventDefault();
           copyWithCallbacks(
             '#{rss_feed_url(@conn, @source)}',
             () => copied = true,
             () => copied = false
           )
-        "}
-        class="flex items-center px-4 py-2 text-sm text-white hover:bg-meta-4 w-full transition-colors"
-      >
+        "} class="flex items-center px-4 py-2 text-sm text-white hover:bg-meta-4 w-full transition-colors">
         Copy RSS Feed
         <span x-show="copied" x-transition.duration.150ms class="ml-auto">
           <.icon name="hero-check" class="h-4 w-4" />
@@ -176,16 +162,28 @@
     <p class="text-xl font-bold text-red-400"><.localized_number number={@counts.failed} /></p>
     <p class="text-xs text-gray-400 uppercase tracking-wide">Failed</p>
   </div>
-  <.tooltip tooltip="Manually skipped — you or a user script turned off download for these specific items" position="bottom-right" tooltip_class="w-64">
+  <.tooltip
+    tooltip="Manually skipped — you or a user script turned off download for these specific items"
+    position="bottom-right"
+    tooltip_class="w-64"
+  >
     <div>
       <p class="text-xl font-bold text-gray-500"><.localized_number number={@counts.prevented} /></p>
-      <p class="text-xs text-gray-400 uppercase tracking-wide cursor-help border-b border-dotted border-gray-600">Prevented</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide cursor-help border-b border-dotted border-gray-600">
+        Prevented
+      </p>
     </div>
   </.tooltip>
-  <.tooltip tooltip="Rule filtered — excluded by your source or profile settings (shorts, livestreams, members-only, cutoff date, duration, title regex)" position="bottom-right" tooltip_class="w-64">
+  <.tooltip
+    tooltip="Rule filtered — excluded by your source or profile settings (shorts, livestreams, members-only, cutoff date, duration, title regex)"
+    position="bottom-right"
+    tooltip_class="w-64"
+  >
     <div>
       <p class="text-xl font-bold text-gray-500"><.localized_number number={@counts.skipped} /></p>
-      <p class="text-xs text-gray-400 uppercase tracking-wide cursor-help border-b border-dotted border-gray-600">Skipped</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide cursor-help border-b border-dotted border-gray-600">
+        Skipped
+      </p>
     </div>
   </.tooltip>
 </div>
@@ -199,10 +197,7 @@
 
 <%!-- JOBS — collapsible section --%>
 <div class="mt-6 rounded-sm border border-strokedark dark:bg-boxdark" x-data="{ open: false }">
-  <button
-    class="w-full flex items-center justify-between px-5 py-3 text-left"
-    x-on:click="open = !open"
-  >
+  <button class="w-full flex items-center justify-between px-5 py-3 text-left" x-on:click="open = !open">
     <span class="font-medium text-white">Active Jobs</span>
     <.icon
       name="hero-chevron-down"
@@ -215,7 +210,12 @@
       <%= if match?([_|_], @pending_tasks) do %>
         <.table rows={@pending_tasks} table_class="text-black dark:text-white">
           <:col :let={task} label="Job">
-            {task.job.worker |> String.split(".") |> List.last() |> Macro.underscore() |> String.replace("_", " ") |> String.capitalize()}
+            {task.job.worker
+            |> String.split(".")
+            |> List.last()
+            |> Macro.underscore()
+            |> String.replace("_", " ")
+            |> String.capitalize()}
           </:col>
           <:col :let={task} label="State">
             {task.job.state}

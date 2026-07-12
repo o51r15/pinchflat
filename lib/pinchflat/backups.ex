@@ -132,13 +132,17 @@ defmodule Pinchflat.Backups do
     sql_filename = "pinchfork-backup-#{timestamp}.sql"
     gz_filename = "#{sql_filename}.gz"
     sql_path = Path.join(@backup_dir, sql_filename)
-    gz_path = Path.join(@backup_dir, gz_filename)
+    _gz_path = Path.join(@backup_dir, gz_filename)
 
     dump_args = [
-      "-h", host,
-      "-p", to_string(port),
-      "-U", user,
-      "-d", db,
+      "-h",
+      host,
+      "-p",
+      to_string(port),
+      "-U",
+      user,
+      "-d",
+      db,
       "--no-password",
       "--format=plain",
       "--file=#{sql_path}"

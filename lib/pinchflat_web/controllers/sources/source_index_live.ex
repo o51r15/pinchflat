@@ -18,8 +18,7 @@ defmodule PinchflatWeb.Sources.SourceIndexLive do
      |> assign(:filter_name, "")
      |> assign(:filter_monitored, "all")
      |> assign(:sort, "name_asc")
-     |> load_sources(),
-     layout: {PinchflatWeb.Layouts, :app}}
+     |> load_sources(), layout: {PinchflatWeb.Layouts, :app}}
   end
 
   @impl true
@@ -142,15 +141,15 @@ defmodule PinchflatWeb.Sources.SourceIndexLive do
               <div class="flex items-center gap-1 flex-shrink-0 mt-0.5">
                 <%!-- Monitored toggle — always visible; green = actively downloading --%>
                 <.tooltip
-                  tooltip={if source.download_media, do: "Monitored — click to stop downloading", else: "Unmonitored — click to start downloading"}
+                  tooltip={
+                    if source.download_media,
+                      do: "Monitored — click to stop downloading",
+                      else: "Unmonitored — click to start downloading"
+                  }
                   position="top"
                   tooltip_class="w-48"
                 >
-                  <button
-                    phx-click="toggle_monitored"
-                    phx-value-id={source.id}
-                    class="transition-colors duration-150"
-                  >
+                  <button phx-click="toggle_monitored" phx-value-id={source.id} class="transition-colors duration-150">
                     <.icon
                       name={if source.download_media, do: "hero-eye", else: "hero-eye-slash"}
                       class={if source.download_media, do: "w-4 h-4 text-green-400", else: "w-4 h-4 text-gray-500"}
@@ -170,8 +169,10 @@ defmodule PinchflatWeb.Sources.SourceIndexLive do
       </div>
 
       <p class="mt-8 text-xs text-gray-500 text-center">
-        Cover art downloads automatically when <strong class="text-gray-400">Download Series Images</strong> is enabled in your Media Profile.
-        Use <strong class="text-gray-400">Actions → Refresh Metadata</strong> on a source to fetch art immediately.
+        Cover art downloads automatically when <strong class="text-gray-400">Download Series Images</strong>
+        is enabled in your Media Profile.
+        Use <strong class="text-gray-400">Actions → Refresh Metadata</strong>
+        on a source to fetch art immediately.
       </p>
     <% end %>
     """
@@ -233,14 +234,22 @@ defmodule PinchflatWeb.Sources.SourceIndexLive do
     sources =
       case assigns.sort do
         "downloaded_desc" ->
-          Enum.sort_by(sources, fn s ->
-            Map.get(counts_by_source, s.id, %{downloaded: 0}).downloaded
-          end, :desc)
+          Enum.sort_by(
+            sources,
+            fn s ->
+              Map.get(counts_by_source, s.id, %{downloaded: 0}).downloaded
+            end,
+            :desc
+          )
 
         "downloaded_asc" ->
-          Enum.sort_by(sources, fn s ->
-            Map.get(counts_by_source, s.id, %{downloaded: 0}).downloaded
-          end, :asc)
+          Enum.sort_by(
+            sources,
+            fn s ->
+              Map.get(counts_by_source, s.id, %{downloaded: 0}).downloaded
+            end,
+            :asc
+          )
 
         _ ->
           sources

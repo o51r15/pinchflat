@@ -1,10 +1,4 @@
-<.simple_form
-  :let={f}
-  for={@changeset}
-  action={@action}
-  method={@method}
-  x-data="{ selectedPreset: null }"
->
+<.simple_form :let={f} for={@changeset} action={@action} method={@method} x-data="{ selectedPreset: null }">
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
@@ -119,12 +113,7 @@
       />
     </section>
 
-    <.input
-      field={f[:audio_track]}
-      placeholder="de"
-      type="text"
-      label="Audio Track Language"
-    />
+    <.input field={f[:audio_track]} placeholder="de" type="text" label="Audio Track Language" />
   </section>
 
   <%!-- THUMBNAILS --%>
@@ -212,12 +201,7 @@
       />
     </section>
 
-    <.input
-      field={f[:media_container]}
-      type="text"
-      label="Media Container"
-      placeholder="mp4"
-    />
+    <.input field={f[:media_container]} type="text" label="Media Container" placeholder="mp4" />
 
     <section x-data="{ presets: { default: null, media_center: 1, audio: null, archiving: 1 } }">
       <.input
@@ -303,7 +287,9 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="font-medium text-white">Delete Profile</p>
-            <p class="text-sm text-gray-400">Deletes this profile and all its sources. Downloaded files are kept on disk.</p>
+            <p class="text-sm text-gray-400">
+              Deletes this profile and all its sources. Downloaded files are kept on disk.
+            </p>
           </div>
           <.link
             href={~p"/media_profiles/#{@changeset.data}"}
@@ -317,7 +303,9 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="font-medium text-white">Delete Profile + Files</p>
-            <p class="text-sm text-gray-400">Deletes this profile, all its sources, and permanently removes all downloaded files from disk.</p>
+            <p class="text-sm text-gray-400">
+              Deletes this profile, all its sources, and permanently removes all downloaded files from disk.
+            </p>
           </div>
           <.link
             href={~p"/media_profiles/#{@changeset.data}?delete_files=true"}

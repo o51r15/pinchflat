@@ -14,9 +14,9 @@ defmodule Pinchflat.Pages.HistoryTableLive do
 
   @default_sort %{
     "downloaded" => {:media_downloaded_at, :desc},
-    "pending"    => {:inserted_at, :desc},
-    "retry"      => {:inserted_at, :desc},
-    "failed"     => {:inserted_at, :desc}
+    "pending" => {:inserted_at, :desc},
+    "retry" => {:inserted_at, :desc},
+    "failed" => {:inserted_at, :desc}
   }
 
   def render(%{records: []} = assigns) do

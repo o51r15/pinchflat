@@ -24,19 +24,11 @@
             <.sidebar_item icon="hero-chart-bar" text="Stats" href={~p"/stats"} />
             <.sidebar_item icon="hero-queue-list" text="Activity" href={~p"/activity"} />
             <.sidebar_item icon="hero-magnifying-glass" text="Search" href={~p"/search"} />
-            <.sidebar_submenu
-              icon="hero-cog-6-tooth"
-              text="Settings"
-              current_path={@current_path}
-            >
+            <.sidebar_submenu icon="hero-cog-6-tooth" text="Settings" current_path={@current_path}>
               <:submenu text="General" href={~p"/settings"} />
               <:submenu text="Media Profiles" href={~p"/media_profiles"} />
             </.sidebar_submenu>
-            <.sidebar_submenu
-              icon="hero-server-stack"
-              text="System"
-              current_path={@current_path}
-            >
+            <.sidebar_submenu icon="hero-server-stack" text="System" current_path={@current_path}>
               <:submenu text="Status" href={~p"/system/status"} />
               <:submenu text="Logs" href={~p"/system/logs"} />
               <:submenu text="Backup" href={~p"/system/backup"} />

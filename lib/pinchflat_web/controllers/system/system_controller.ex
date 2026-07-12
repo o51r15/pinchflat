@@ -25,7 +25,9 @@ defmodule PinchflatWeb.System.SystemController do
       case Repo.query("SELECT version()") do
         {:ok, %{rows: [[v]]}} ->
           v |> String.split(" ") |> Enum.take(2) |> Enum.join(" ")
-        _ -> "—"
+
+        _ ->
+          "—"
       end
 
     # oban_jobs.state is a Postgres enum — cast to text for grouping
@@ -41,7 +43,11 @@ defmodule PinchflatWeb.System.SystemController do
     # Use curl rather than :httpc — Erlang's DNS resolver doesn't pick up
     # Docker's embedded DNS, but system processes (including curl) do.
     po_token_status =
-      case System.cmd("curl", ["-s", "-o", "/dev/null", "-w", "%{http_code}", "--max-time", "3", "http://bgutil-provider:4416"], stderr_to_stdout: true) do
+      case System.cmd(
+             "curl",
+             ["-s", "-o", "/dev/null", "-w", "%{http_code}", "--max-time", "3", "http://bgutil-provider:4416"],
+             stderr_to_stdout: true
+           ) do
         {code, 0} when code != "" -> :up
         _ -> :down
       end
@@ -73,10 +79,21 @@ defmodule PinchflatWeb.System.SystemController do
     # Empty JSON body {} tells bgutil to generate its own visitor_data and return a real token.
     {flash_type, flash_msg} =
       case System.cmd(
-        "curl",
-        ["-s", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{}", "--max-time", "30", "http://bgutil-provider:4416/get_pot"],
-        stderr_to_stdout: true
-      ) do
+             "curl",
+             [
+               "-s",
+               "-X",
+               "POST",
+               "-H",
+               "Content-Type: application/json",
+               "-d",
+               "{}",
+               "--max-time",
+               "30",
+               "http://bgutil-provider:4416/get_pot"
+             ],
+             stderr_to_stdout: true
+           ) do
         {output, 0} ->
           case Jason.decode(output) do
             {:ok, %{"poToken" => token}} when is_binary(token) and byte_size(token) > 0 ->
@@ -143,8 +160,6 @@ defmodule PinchflatWeb.System.SystemController do
   end
 
   def updates(conn, _params) do
-    render(conn, :updates,
-      current_version: Application.spec(:pinchflat)[:vsn] |> to_string()
-    )
+    render(conn, :updates, current_version: Application.spec(:pinchflat)[:vsn] |> to_string())
   end
 end

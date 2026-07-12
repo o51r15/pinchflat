@@ -1,8 +1,4 @@
-<.simple_form
-  :let={f}
-  for={@changeset}
-  action={@action}
->
+<.simple_form :let={f} for={@changeset} action={@action}>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
@@ -30,17 +26,9 @@
           label="Sleep Interval (seconds)"
         />
 
-        <.input
-          field={f[:download_throughput_limit]}
-          placeholder="4.2M"
-          label="Download Throughput"
-        />
+        <.input field={f[:download_throughput_limit]} placeholder="4.2M" label="Download Throughput" />
 
-        <.input
-          field={f[:restrict_filenames]}
-          type="toggle"
-          label="Restrict Filenames"
-        />
+        <.input field={f[:restrict_filenames]} type="toggle" label="Restrict Filenames" />
       </section>
     </:tab>
 
@@ -48,7 +36,11 @@
       <section class="mt-4">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-2xl text-black dark:text-white">Notification Settings</h3>
-          <.link href="https://github.com/o51r15/pinchfork/wiki/Podcast-RSS-Feeds" target="_blank" class="text-sm hover:underline">
+          <.link
+            href="https://github.com/o51r15/pinchfork/wiki/Podcast-RSS-Feeds"
+            target="_blank"
+            class="text-sm hover:underline"
+          >
             📖 Docs
           </.link>
         </div>

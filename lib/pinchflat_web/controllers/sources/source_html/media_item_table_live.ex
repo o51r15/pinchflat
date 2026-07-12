@@ -249,7 +249,7 @@ defmodule PinchflatWeb.Sources.MediaItemTableLive do
 
   defp maybe_order_by_rank(query, nil), do: order_by(query, desc: :uploaded_at)
   defp maybe_order_by_rank(query, ""), do: order_by(query, desc: :uploaded_at)
-  defp maybe_order_by_rank(query, _term), do: order_by(query, [desc: fragment("rank"), desc: :uploaded_at])
+  defp maybe_order_by_rank(query, _term), do: order_by(query, desc: fragment("rank"), desc: :uploaded_at)
 
   defp generate_base_query(source, "pending") do
     MediaQuery.new()

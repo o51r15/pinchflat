@@ -33,20 +33,15 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
           phx-click="toggle_show_excluded"
           class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors"
         >
-          <.icon
-            name={if @show_excluded, do: "hero-eye-slash", else: "hero-eye"}
-            class="w-3.5 h-3.5"
-          />
+          <.icon name={if @show_excluded, do: "hero-eye-slash", else: "hero-eye"} class="w-3.5 h-3.5" />
           {if @show_excluded, do: "Hide excluded", else: "Show excluded"}
         </button>
       </div>
       <%= for year_data <- @years do %>
         <% expanded = Map.get(@expanded_years, year_data.year) %>
         <div class="rounded-lg overflow-visible border border-strokedark">
-
           <%!-- Year section header --%>
           <div class="flex items-center gap-3 px-4 py-3 bg-meta-4 flex-wrap">
-
             <%!-- Expand/collapse button — wraps left content --%>
             <button
               phx-click="toggle_expand"
@@ -126,7 +121,14 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
                 </thead>
                 <tbody>
                   <%= for item <- expanded.items do %>
-                    <% status = item_status(item, expanded.active_job_ids, @source.download_cutoff_date, @source, @source.media_profile) %>
+                    <% status =
+                      item_status(
+                        item,
+                        expanded.active_job_ids,
+                        @source.download_cutoff_date,
+                        @source,
+                        @source.media_profile
+                      ) %>
                     <tr class="border-b border-strokedark/50 hover:bg-meta-4/40 transition-colors">
                       <td class="px-4 py-2 text-gray-400 whitespace-nowrap text-xs">
                         {format_episode_date(item.uploaded_at)}
@@ -167,10 +169,7 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
                           class="text-gray-500 hover:text-white transition-colors"
                           title={if item.prevent_download, do: "Enable download", else: "Disable download"}
                         >
-                          <.icon
-                            name={if item.prevent_download, do: "hero-eye-slash", else: "hero-eye"}
-                            class="w-4 h-4"
-                          />
+                          <.icon name={if item.prevent_download, do: "hero-eye-slash", else: "hero-eye"} class="w-4 h-4" />
                         </button>
                       </td>
                     </tr>
@@ -187,7 +186,6 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
               </p>
             </div>
           <% end %>
-
         </div>
       <% end %>
     </div>
@@ -242,7 +240,9 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
     items = load_items_for_year(socket.assigns.source, year, page_size, socket.assigns.show_excluded)
 
     {:noreply,
-     assign(socket, :expanded_years,
+     assign(
+       socket,
+       :expanded_years,
        Map.update(socket.assigns.expanded_years, year, %{}, fn entry ->
          %{entry | items: items, page_size: page_size}
        end)
@@ -346,20 +346,18 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
 
     dynamic(
       [mi, s, _mp],
+      # Passes profile's shorts/livestream format preference
+      # Not policy-excluded by reason (set at index time)
+      # Not members-only when source has members disabled
+      # Meets the source's cutoff date (items before cutoff hidden by default)
       not is_nil(mi.media_filepath) or
-        (
-          # Passes profile's shorts/livestream format preference
-          ^MediaQuery.format_matching_profile_preference() and
-          # Not policy-excluded by reason (set at index time)
-          (is_nil(mi.download_prevented_reason) or
-             mi.download_prevented_reason not in ^policy_reasons) and
-          # Not members-only when source has members disabled
-          not (s.download_members_videos == false and
-                 mi.availability in ^members_availability) and
-          # Meets the source's cutoff date (items before cutoff hidden by default)
-          (is_nil(s.download_cutoff_date) or
-             fragment("?::date >= ?", mi.uploaded_at, s.download_cutoff_date))
-        )
+        (^MediaQuery.format_matching_profile_preference() and
+           (is_nil(mi.download_prevented_reason) or
+              mi.download_prevented_reason not in ^policy_reasons) and
+           not (s.download_members_videos == false and
+                  mi.availability in ^members_availability) and
+           (is_nil(s.download_cutoff_date) or
+              fragment("?::date >= ?", mi.uploaded_at, s.download_cutoff_date)))
     )
   end
 
@@ -640,7 +638,6 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
   defp status_label(:skipped_members), do: "Skipped · Members"
   defp status_label(:skipped_manual), do: "Skipped · Manual"
   defp status_label(:skipped_cutoff), do: "Skipped · Cutoff"
-  defp status_label(:excluded), do: "Excluded"
 
   defp status_badge_class(:downloaded), do: "bg-green-500/20 text-green-400"
   defp status_badge_class(:downloading), do: "bg-teal-500/20 text-teal-400"
@@ -653,7 +650,6 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
   defp status_badge_class(:skipped_members), do: "bg-gray-500/15 text-gray-500"
   defp status_badge_class(:skipped_manual), do: "bg-gray-500/15 text-gray-500"
   defp status_badge_class(:skipped_cutoff), do: "bg-gray-500/15 text-gray-500"
-  defp status_badge_class(:excluded), do: "bg-gray-500/15 text-gray-500"
 
   defp year_toggle_class(:on), do: "bg-green-500/20 text-green-400 hover:bg-green-500/30"
   defp year_toggle_class(:mixed), do: "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30"

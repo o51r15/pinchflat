@@ -89,7 +89,6 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
           conn
           |> put_resp_content_type(mime_type)
           |> put_resp_header("accept-ranges", "bytes")
-
           |> put_resp_header("content-range", "bytes #{start_pos}-#{end_pos}/#{file_size}")
           |> put_resp_header("content-length", to_string(length))
           |> put_resp_header("content-disposition", "inline; filename=\"#{safe_title}\"")

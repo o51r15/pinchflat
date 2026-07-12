@@ -120,7 +120,9 @@ defmodule Pinchflat.YtDlp.MediaCollection do
     # avatar/banner, title/id for NFO, extras for stored blob) while explicitly excluding
     # `entries` and per-video format data. The unscoped `playlist:%()j` produced 1MB+
     # JSON for large channels, causing Jason.DecodeError on truncated writes.
-    output_template = "playlist:%(.{id,channel,channel_id,title,description,thumbnails,uploader,uploader_id,uploader_url,channel_url,playlist_count,channel_follower_count,tags,availability,modified_date,view_count})j"
+    output_template =
+      "playlist:%(.{id,channel,channel_id,title,description,thumbnails,uploader,uploader_id,uploader_url,channel_url,playlist_count,channel_follower_count,tags,availability,modified_date,view_count})j"
+
     action = :get_source_metadata
 
     with {:ok, output} <- backend_runner().run(source_url, action, all_command_opts, output_template, addl_opts),
