@@ -342,7 +342,7 @@ defmodule PinchflatWeb.Sources.SourceController do
           File.cp!(upload.path, dest_path)
           {:ok, dest_path}
 
-        url = get_in(params, ["poster", "url"]) when url != "" ->
+        (url = get_in(params, ["poster", "url"])) && url != "" ->
           case Pinchflat.HTTP.HTTPClient.get(url) do
             {:ok, %{body: body}} ->
               File.write!(dest_path, body)
