@@ -53,6 +53,41 @@
       </section>
     </:tab>
 
+    <:tab title="Discovery" id="discovery">
+      <section class="mt-4">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-2xl text-black dark:text-white">Discovery</h3>
+        </div>
+        <p class="text-sm text-gray-400 mb-4">
+          Find new YouTube channels based on your existing library.
+          Scans are manual — hit "Scan Now" on the Discovery page.
+        </p>
+
+        <.input field={f[:discovery_enabled]} type="toggle" label="Enable Discovery" />
+
+        <div class="mt-6 mb-2">
+          <h4 class="text-lg text-black dark:text-white mb-2">Generators</h4>
+          <p class="text-sm text-gray-400 mb-4">
+            Toggle which discovery methods are active during a scan.
+          </p>
+        </div>
+
+        <.input field={f[:discovery_g1_enabled]} type="toggle" label="G1 — Mention Mining" />
+        <p class="text-xs text-bodydark2 mb-3 ml-1">Finds channels mentioned in your video descriptions. Local only, no network calls.</p>
+
+        <.input field={f[:discovery_g2_enabled]} type="toggle" label="G2 — Featured Channels" />
+        <p class="text-xs text-bodydark2 mb-3 ml-1">Crawls the Channels tab of your sources. Uses yt-dlp, zero API quota.</p>
+
+        <.input field={f[:discovery_g3_enabled]} type="toggle" label="G3 — LLM Search (coming soon)" />
+        <p class="text-xs text-bodydark2 mb-3 ml-1">LLM-guided YouTube search queries. Requires OpenWebUI connection.</p>
+
+        <.input field={f[:discovery_g4_enabled]} type="toggle" label="G4 — LLM Suggestions (coming soon)" />
+        <p class="text-xs text-bodydark2 mb-3 ml-1">Direct channel suggestions from an LLM. Validated before surfacing.</p>
+
+        {live_render(@conn, Pinchflat.Settings.DismissedChannelsLive, session: %{})}
+      </section>
+    </:tab>
+
     <:tab title="Advanced" id="advanced">
       <section class="mt-4">
         <div class="flex justify-between items-center mb-4">

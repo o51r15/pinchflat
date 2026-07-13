@@ -46,6 +46,8 @@ defmodule PinchflatWeb.Router do
     get "/stats", Pages.PageController, :stats
     get "/activity", Pages.PageController, :activity
 
+    live "/discovery", Discovery.DiscoveryLive, :index
+
     resources "/media_profiles", MediaProfiles.MediaProfileController
     resources "/search", Searches.SearchController, only: [:show], singleton: true
 

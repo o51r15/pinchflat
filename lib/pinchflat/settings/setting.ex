@@ -17,7 +17,13 @@ defmodule Pinchflat.Settings.Setting do
     :youtube_api_key,
     :extractor_sleep_interval_seconds,
     :download_throughput_limit,
-    :restrict_filenames
+    :restrict_filenames,
+    :discovery_enabled,
+    :discovery_g1_enabled,
+    :discovery_g2_enabled,
+    :discovery_g3_enabled,
+    :discovery_g4_enabled,
+    :discovery_disabled_clusters
   ]
 
   @required_fields [
@@ -43,6 +49,14 @@ defmodule Pinchflat.Settings.Setting do
 
     field :video_codec_preference, :string
     field :audio_codec_preference, :string
+
+    # Discovery settings
+    field :discovery_enabled, :boolean, default: false
+    field :discovery_g1_enabled, :boolean, default: true
+    field :discovery_g2_enabled, :boolean, default: true
+    field :discovery_g3_enabled, :boolean, default: true
+    field :discovery_g4_enabled, :boolean, default: true
+    field :discovery_disabled_clusters, {:array, :string}, default: []
   end
 
   @doc false
