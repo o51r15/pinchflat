@@ -76,10 +76,10 @@ defmodule PinchflatWeb.MediaItems.MediaItemController do
       file_size = File.stat!(media_item.media_filepath).size
       mime_type = MIME.from_path(media_item.media_filepath)
 
-      # S1: strip CR/LF from title before embedding in response header.
+      # S1+S5: strip CR/LF/quotes from title before embedding in response header.
       # media_item.title comes from yt-dlp metadata (untrusted); a title containing
       # \r\n would allow CRLF injection into response headers on this unauthenticated endpoint.
-      safe_title = String.replace(media_item.title, ~r/[\r\n]/, " ")
+      safe_title = String.replace(media_item.title, ~r/[\r\n"]/, " ")
 
       case parse_range(conn, file_size) do
         {:ok, {start_pos, end_pos}} ->

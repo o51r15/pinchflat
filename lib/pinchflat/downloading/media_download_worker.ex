@@ -233,7 +233,7 @@ defmodule Pinchflat.Downloading.MediaDownloadWorker do
       # Members / premium
       "This video is available to this channel's members",
       "members-only",
-      "premium",
+      "YouTube Premium",
       # Geo-blocked
       "not available in your country",
       "not available in your region",
