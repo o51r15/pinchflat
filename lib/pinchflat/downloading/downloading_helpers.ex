@@ -182,7 +182,7 @@ defmodule Pinchflat.Downloading.DownloadingHelpers do
 
     if job_ids != [] do
       from(j in Oban.Job, where: j.id in ^job_ids)
-      |> Repo.update_all(set: [state: "cancelled"])
+      |> Oban.cancel_all_jobs()
     end
 
     from(t in Pinchflat.Tasks.Task, where: t.media_item_id == ^cleared_media_item.id)

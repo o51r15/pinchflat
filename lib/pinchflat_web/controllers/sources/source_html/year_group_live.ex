@@ -424,7 +424,7 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
 
     if job_ids != [] do
       from(j in Oban.Job, where: j.id in ^job_ids)
-      |> Repo.update_all(set: [state: "cancelled"])
+      |> Oban.cancel_all_jobs()
     end
 
     from(t in PFTask, where: t.media_item_id == ^media_item_id)
@@ -452,7 +452,7 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
 
     if job_ids != [] do
       from(j in Oban.Job, where: j.id in ^job_ids)
-      |> Repo.update_all(set: [state: "cancelled"])
+      |> Oban.cancel_all_jobs()
     end
 
     from(t in PFTask, where: t.media_item_id in ^item_ids)
