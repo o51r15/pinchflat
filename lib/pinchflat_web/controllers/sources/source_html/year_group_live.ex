@@ -400,14 +400,14 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
 
   defp enable_item(item) do
     {:ok, updated} =
-      Media.update_media_item(item, %{prevent_download: false, error_type: nil, last_error: nil})
+      Media.update_media_item(item, %{prevent_download: false, download_prevented_reason: nil, error_type: nil, last_error: nil})
 
     updated = Repo.preload(updated, :source, force: true)
     DownloadingHelpers.kickoff_download_if_pending(updated)
   end
 
   defp disable_item(item) do
-    {:ok, _} = Media.update_media_item(item, %{prevent_download: true})
+    {:ok, _} = Media.update_media_item(item, %{prevent_download: true, download_prevented_reason: "manual"})
     cancel_and_delete_jobs_for_item(item.id)
   end
 
@@ -439,7 +439,7 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
     item_ids = year_item_ids(source, year)
 
     from(mi in MediaItem, where: mi.id in ^item_ids)
-    |> Repo.update_all(set: [prevent_download: true])
+    |> Repo.update_all(set: [prevent_download: true, download_prevented_reason: "manual"])
 
     job_ids =
       from(t in PFTask,
@@ -463,7 +463,7 @@ defmodule PinchflatWeb.Sources.YearGroupLive do
     item_ids = year_item_ids(source, year)
 
     from(mi in MediaItem, where: mi.id in ^item_ids)
-    |> Repo.update_all(set: [prevent_download: false])
+    |> Repo.update_all(set: [prevent_download: false, download_prevented_reason: nil])
 
     DownloadingHelpers.enqueue_pending_download_tasks(source)
   end

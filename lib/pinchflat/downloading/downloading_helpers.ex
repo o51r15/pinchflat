@@ -163,7 +163,8 @@ defmodule Pinchflat.Downloading.DownloadingHelpers do
       Media.update_media_item(media_item, %{
         error_type: nil,
         last_error: nil,
-        prevent_download: false
+        prevent_download: false,
+        download_prevented_reason: nil
       })
 
     # Remove any existing tasks/jobs for this item so the unique constraint won't reject the

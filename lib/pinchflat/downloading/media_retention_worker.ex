@@ -43,7 +43,7 @@ defmodule Pinchflat.Downloading.MediaRetentionWorker do
       # We don't actually do anything with that in terms of queries and it gets set to nil if the media item
       # gets re-downloaded.
       Media.delete_media_files(media_item, %{
-        prevent_download: true,
+        prevent_download: true, download_prevented_reason: "retention",
         culled_at: DateTime.utc_now()
       })
     end)
