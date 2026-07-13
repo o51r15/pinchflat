@@ -19,6 +19,10 @@ defmodule Pinchflat.Downloading.MediaDownloadWorker do
 
   alias Pinchflat.Lifecycle.UserScripts.CommandRunner, as: UserScriptRunner
 
+  # 4-hour timeout prevents infinite fragment retries from pinning a worker slot forever.
+  @impl Oban.Worker
+  def timeout(_job), do: :timer.hours(4)
+
   @doc """
   Starts the media_item media download worker and creates a task for the media_item.
 

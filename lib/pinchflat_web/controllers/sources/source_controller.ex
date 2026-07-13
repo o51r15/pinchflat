@@ -339,27 +339,34 @@ defmodule PinchflatWeb.Sources.SourceController do
     end
   end
 
+  @max_poster_bytes 10_000_000
+  @allowed_poster_types %{
+    "image/jpeg" => ".jpg",
+    "image/png" => ".png",
+    "image/webp" => ".webp"
+  }
+
   def upload_custom_poster(conn, %{"source_id" => id} = params) do
     source = Sources.get_source!(id)
     metadata_dir = Pinchflat.Metadata.MetadataFileHelpers.metadata_directory_for(source)
     File.mkdir_p!(metadata_dir)
-    dest_path = Path.join(metadata_dir, "custom_poster.jpg")
+
+    # Remove any old custom poster with a different extension
+    Enum.each(Map.values(@allowed_poster_types), fn ext ->
+      old_path = Path.join(metadata_dir, "custom_poster" <> ext)
+      if File.exists?(old_path), do: File.rm(old_path)
+    end)
 
     result =
       cond do
         upload = get_in(params, ["poster", "upload"]) ->
+          ext = poster_extension(upload.content_type, upload.filename)
+          dest_path = Path.join(metadata_dir, "custom_poster" <> ext)
           File.cp!(upload.path, dest_path)
           {:ok, dest_path}
 
         (url = get_in(params, ["poster", "url"])) && url != "" ->
-          case Pinchflat.HTTP.HTTPClient.get(url) do
-            {:ok, %{body: body}} ->
-              File.write!(dest_path, body)
-              {:ok, dest_path}
-
-            _ ->
-              {:error, "Could not fetch image from URL"}
-          end
+          fetch_poster_from_url(url, metadata_dir)
 
         true ->
           {:error, "No image provided"}
@@ -388,6 +395,47 @@ defmodule PinchflatWeb.Sources.SourceController do
     conn
     |> put_flash(:info, "Custom poster removed.")
     |> redirect(to: ~p"/sources/#{source}/edit_metadata")
+  end
+
+
+  # Determines the file extension for a poster based on content-type, falling back
+  # to the original filename extension if the content-type is unknown.
+  defp poster_extension(content_type, filename) do
+    Map.get(@allowed_poster_types, content_type) ||
+      case Path.extname(filename || "") |> String.downcase() do
+        ext when ext in [".png", ".webp", ".jpg", ".jpeg"] ->
+          if ext == ".jpeg", do: ".jpg", else: ext
+        _ ->
+          ".jpg"
+      end
+  end
+
+  defp fetch_poster_from_url(url, metadata_dir) do
+    case :httpc.request(:get, {String.to_charlist(url), []}, [], body_format: :binary) do
+      {:ok, {{_version, 200, _reason}, headers, body}} when byte_size(body) <= @max_poster_bytes ->
+        content_type =
+          headers
+          |> Enum.find_value(fn
+            {key, val} ->
+              if to_string(key) |> String.downcase() == "content-type",
+                do: to_string(val) |> String.split(";") |> hd() |> String.trim()
+          end)
+
+        if Map.has_key?(@allowed_poster_types, content_type) do
+          ext = @allowed_poster_types[content_type]
+          dest_path = Path.join(metadata_dir, "custom_poster" <> ext)
+          File.write!(dest_path, body)
+          {:ok, dest_path}
+        else
+          {:error, "URL did not return a supported image type (JPEG, PNG, or WebP)"}
+        end
+
+      {:ok, {{_version, 200, _reason}, _headers, body}} when byte_size(body) > @max_poster_bytes ->
+        {:error, "Image exceeds 10 MB size limit"}
+
+      _ ->
+        {:error, "Could not fetch image from URL"}
+    end
   end
 
   defp wrap_forced_action(conn, source_id, message, fun) do

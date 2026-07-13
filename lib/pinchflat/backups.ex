@@ -167,6 +167,7 @@ defmodule Pinchflat.Backups do
         end
 
       {output, exit_code} ->
+        File.rm(sql_path)
         Logger.error("pg_dump failed (exit #{exit_code}): #{output}")
         {:error, "pg_dump failed (exit #{exit_code}): #{String.slice(output, 0, 500)}"}
     end

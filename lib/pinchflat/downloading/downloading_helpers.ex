@@ -168,10 +168,7 @@ defmodule Pinchflat.Downloading.DownloadingHelpers do
       })
 
     # Remove any existing tasks/jobs for this item so the unique constraint won't reject the
-    # new job and no stale job lingers. We bypass Tasks.delete_tasks_for here because it routes
-    # through list_tasks_for which has the Oban enum-cast issue (oban_jobs.state is a Postgres
-    # enum, not text — without casting, state comparisons silently match nothing and stale jobs
-    # are left behind). Instead we cancel/delete jobs directly with the cast, then remove tasks.
+    # new job and no stale job lingers.
     job_ids =
       from(t in Pinchflat.Tasks.Task,
         join: j in assoc(t, :job),
