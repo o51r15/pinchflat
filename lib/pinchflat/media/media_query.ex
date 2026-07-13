@@ -270,8 +270,8 @@ defmodule Pinchflat.Media.MediaQuery do
     |> String.trim()
     |> String.replace(~r/\s+/, " ")
     |> String.split(" ")
-    |> Enum.map(fn word -> Regex.replace(~r/[^a-zA-Z0-9\-]/, word, "") end)
-    |> Enum.reject(fn word -> not Regex.match?(~r/[a-zA-Z0-9]/, word) end)
+    |> Enum.map(fn word -> Regex.replace(~r/[^\p{L}\p{N}\-]/u, word, "") end)
+    |> Enum.reject(fn word -> not Regex.match?(~r/[\p{L}\p{N}]/u, word) end)
     |> Enum.map_join(" & ", fn word -> "#{word}:*" end)
   end
 end

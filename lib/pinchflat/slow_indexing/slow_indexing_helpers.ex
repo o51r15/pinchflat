@@ -211,8 +211,9 @@ defmodule Pinchflat.SlowIndexing.SlowIndexingHelpers do
   #   subscriber_only /
   #   premium_only /
   #   needs_auth         -> covered by source.download_members_videos
-  #   unlisted, private,
+  #   private,
   #   or anything else   -> always blocked
+  #   unlisted           -> treated as public (downloadable, common in archival playlists)
   defp availability_policy(availability, %Source{} = source) do
     case availability do
       nil ->
@@ -224,8 +225,11 @@ defmodule Pinchflat.SlowIndexing.SlowIndexingHelpers do
       av when av in @members_availability ->
         if source.download_members_videos, do: {false, nil}, else: {true, "policy_members"}
 
+      "unlisted" ->
+        if source.download_public_videos, do: {false, nil}, else: {true, "policy_public"}
+
       _other ->
-        # unlisted, private, or any unknown value — always skip
+        # private or any unknown value — always skip
         {true, "policy_other"}
     end
   end
