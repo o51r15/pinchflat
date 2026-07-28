@@ -1,88 +1,71 @@
-> **This is a personal fork of [kieraneglin/pinchflat](https://github.com/kieraneglin/pinchflat).** The upstream project entered a development pause in September 2025. This fork continues active development with a focus on backend stability and operational improvements. See the [Fork Changes](#fork-changes) section for details.
-
-[![License](https://img.shields.io/badge/license-AGPL--3.0-ee512b?style=for-the-badge)](https://github.com/o51r15/pinchflat/blob/master/LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/o51r15/pinchflat?style=for-the-badge&color=purple)](https://github.com/o51r15/pinchflat/releases)
+<div align="center">
 
 # Pinchfork
 
-## Table of contents
+**Self-hosted YouTube media manager — download, organize, and serve your library.**
 
-- [Fork Changes](#fork-changes)
-- [Roadmap](#roadmap)
-- [What it does](#what-it-does)
-- [Features](#features)
-- [Installation](#installation)
-  - [Docker Compose (with Postgres)](#docker-compose-with-postgres)
-  - [Environment Variables](#environment-variables)
-  - [Reverse Proxies](#reverse-proxies)
-- [Upstream documentation](#upstream-documentation)
-- [Configuration Differences from Upstream](#configuration-differences-from-upstream)
-- [Contributors](#contributors)
-- [License](#license)
+A PostgreSQL-backed fork of [Pinchflat](https://github.com/kieraneglin/pinchflat) with continued active development focused on backend stability, operational improvements, and new features.
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/o51r15/pinchfork)](https://github.com/o51r15/pinchfork)
+[![Latest Release](https://img.shields.io/github/v/release/o51r15/pinchfork?color=purple)](https://github.com/o51r15/pinchfork/releases)
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-ee512b.svg)](LICENSE)
+[![Elixir](https://img.shields.io/badge/elixir-1.17%2B-purple.svg)](https://elixir-lang.org/)
+
+</div>
 
 ---
 
-> ⚠️ **Playlist support is currently inconsistent.** Playlists may fail to download media, fail to fetch metadata, or behave unpredictably depending on the deployment. Channel URLs are recommended. Playlist support is being actively investigated.
+> **Active fork** — the upstream project entered a development pause in September 2025. This fork continues with new features, bug fixes, and infrastructure improvements. See the [Fork Changes](https://github.com/o51r15/pinchfork/wiki/Fork-Changes) wiki page for a full breakdown.
 
-> ⚠️ **ARM hardware (Raspberry Pi) is unsupported.** Pinchfork runs on Pi hardware but there are known architecture-specific bugs with yt-dlp source type detection and YouTube authentication. Use on Pi at your own risk. Issues specific to ARM are low priority and may not be fixed.
+## What It Does
+Pinchfork downloads YouTube content via [yt-dlp](https://github.com/yt-dlp/yt-dlp) on a schedule. You set up rules for channels or playlists — it handles the rest, periodically checking for new content and organizing downloads for use with media center apps (Plex, Jellyfin, Kodi) or direct playback.
 
----
-
-## Fork Changes
-
-See [Fork Changes](https://github.com/o51r15/pinchfork/wiki/Fork-Changes) on the wiki for a full breakdown of how this fork differs from upstream Pinchflat.
-
----
-
-## Roadmap
-
-See the [Roadmap](https://github.com/o51r15/pinchfork/wiki/Roadmap) on the wiki for planned features and known bugs.
-
----
-
-## What it does
-
-Pinchflat is a self-hosted app for downloading YouTube content built using [yt-dlp](https://github.com/yt-dlp/yt-dlp). It's designed to be lightweight, self-contained, and easy to use. You set up rules for how to download content from YouTube channels or playlists and it'll do the rest, periodically checking for new content. It's perfect for people who want to download content for use with a media center app (Plex, Jellyfin, Kodi) or for those who want to archive media.
-
-While you can download individual videos, Pinchflat is best suited for downloading content from channels or playlists. It's also not meant for consuming content in-app — Pinchflat downloads content to disk where you can then watch it with a media center app or VLC.
-
----
+Unlike one-off downloaders, Pinchfork is designed for ongoing library management: automatic re-downloads, content aging policies, quality upgrades, and a Sonarr-style UI for browsing your collection.
 
 ## Features
 
-- Powerful naming system so content is stored where and how you want it
-- Easy-to-use web interface with presets to get you started right away
-- Sonarr-style UI — source grid, fanart banners, year-grouped episode lists, activity page
-- First-class support for media center apps like Plex, Jellyfin, and Kodi
-- Supports serving RSS feeds to your favourite podcast app
-- Automatically downloads new content from channels and playlists
-- Source type selector — specify Channel or Playlist to override unreliable auto-detection
-- Source metadata editor — edit name and description with lock toggles; upload a custom poster
-- Content availability filtering — independently control public and members-only video downloads
-- Supports downloading audio content
-- Custom rules for handling YouTube Shorts and livestreams
-- Apprise support for notifications
-- Allows automatically redownloading new media after a set period
-- Optionally automatically delete old content
-- Advanced options like setting cutoff dates and filtering by title
-- Can pass cookies to YouTube to download private playlists and members-only content
-- Per-source cookie behaviour and video client override for SABR bypass
-- PO token support via bgutil sidecar for reliable YouTube access
-- SponsorBlock integration
-- Custom `yt-dlp` options support
-- Custom lifecycle scripts (alpha)
+- **Sonarr-Style UI** — source grid with fanart banners, year-grouped episode lists, activity page
 - **Channel Discovery** — find new channels based on your existing library using heuristic scanning, with daily auto-scan and a dedicated Discovery page
-- **PostgreSQL backend** for reliable concurrent job processing
+- **PostgreSQL Backend** — reliable concurrent job processing via Oban Pro
+- **Powerful Naming** — flexible templates so content is stored where and how you want it
+- **Media Center Integration** — first-class support for Plex, Jellyfin, and Kodi
+- **RSS Feeds** — serve sources to your favourite podcast app
+- **Source Metadata Editor** — edit name and description with lock toggles; upload custom posters
+- **Content Availability Filtering** — independently control public and members-only video downloads
+- **YouTube Shorts & Livestreams** — custom rules for each
+- **Apprise Notifications** — alerts via Discord, Gotify, Telegram, email, and 80+ services
+- **Auto Re-download** — periodically re-download media for quality upgrades
+- **Content Aging** — optionally delete old content automatically
+- **Cookie Support** — pass cookies for private playlists and members-only content
+- **PO Token Support** — bgutil sidecar for reliable YouTube access
+- **SponsorBlock** — skip or remove sponsor segments
+- **Custom yt-dlp Options** — pass any yt-dlp flag per source
+- **Custom Lifecycle Scripts** — hook into download events (alpha)
+- **Per-Source Client Override** — cookie behaviour and video client override for SABR bypass
+## Quick Start
 
----
+### Docker Compose (recommended)
 
-## Installation
+```bash
+# 1. Create your compose file
+mkdir -p ~/pinchfork
+curl -o ~/pinchfork/docker-compose.yml \
+  https://raw.githubusercontent.com/o51r15/pinchfork/master/docker-compose.example.yml
 
-### Docker Compose (with Postgres)
+# 2. Edit docker-compose.yml — set your paths and Postgres password
+nano ~/pinchfork/docker-compose.yml
 
-This fork requires a Postgres container alongside the app. Pre-built images are available on GHCR — no local build required.
+# 3. Run
+docker compose -f ~/pinchfork/docker-compose.yml up -d
+```
 
-**Create your docker-compose file.** Replace paths and password as needed:
+Dashboard: **http://localhost:8945**
+
+Migrations run automatically at startup. The stack includes Postgres 16 and the bgutil PO token provider.
+
+> **Updating:** `docker compose pull && docker compose up -d`
+
+### Docker Compose File
 
 ```yaml
 services:
@@ -90,8 +73,7 @@ services:
     container_name: pinchflat-db
     image: postgres:16-alpine
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: pinchflat
+    environment:      POSTGRES_USER: pinchflat
       POSTGRES_PASSWORD: your_password_here
       POSTGRES_DB: pinchflat
     volumes:
@@ -119,8 +101,7 @@ services:
     environment:
       - TZ=America/New_York
       - DATABASE_URL=ecto://pinchflat:your_password_here@pinchflat-db/pinchflat
-      - POOL_SIZE=10
-    ports:
+      - POOL_SIZE=10    ports:
       - '8945:8945'
     volumes:
       - /path/to/config:/config
@@ -130,61 +111,52 @@ volumes:
   pinchflat_pgdata:
 ```
 
-**Start:**
+## Configuration
 
-```bash
-docker compose -f /path/to/your/docker-compose.yml up -d
-```
+| Setting | Required | Default | Description |
+|---------|----------|---------|-------------|
+| `DATABASE_URL` | **Yes** | — | Postgres connection string: `ecto://user:pass@host/db` |
+| `TZ` | No | `UTC` | IANA timezone format |
+| `POOL_SIZE` | No | `10` | Postgres connection pool size |
+| `LOG_LEVEL` | No | `debug` | `debug` or `info` |
+| `UMASK` | No | `022` | Unraid users may want `000` |
+| `BASIC_AUTH_USERNAME` | No | — | Enables basic auth (both username and password required) |
+| `BASIC_AUTH_PASSWORD` | No | — | Enables basic auth (both username and password required) |
+| `EXPOSE_FEED_ENDPOINTS` | No | `false` | Enable RSS feed endpoints |
+| `ENABLE_IPV6` | No | `false` | Any non-blank value enables |
+| `BASE_ROUTE_PATH` | No | `/` | Base path for reverse proxy subdirectory deployments |
+| `YT_DLP_WORKER_CONCURRENCY` | No | `2` | yt-dlp workers per queue. Set to `1` if getting IP limited |
+| `YT_DLP_VERSION` | No | `stable` | `stable`, `nightly`, `master`, `pinned`/`none`, or specific version |
+| `ENABLE_PROMETHEUS` | No | `false` | Any non-blank value enables |
+For a full breakdown of env vars added/removed and Oban behavior changes, see [Fork Changes — Configuration differences from upstream](https://github.com/o51r15/pinchfork/wiki/Fork-Changes#configuration-differences-from-upstream) on the wiki.
 
-Migrations run automatically at startup. The app will be available at `http://your-server:8945`.
+> **Reverse proxies:** Pinchfork makes heavy use of websockets for real-time updates. Ensure your reverse proxy is configured to support websockets.
 
-> **Updating:** Pull the latest image and recreate the container: `docker compose pull && docker compose up -d`
+## Roadmap
 
-### Environment Variables
+See the [Roadmap](https://github.com/o51r15/pinchfork/wiki/Roadmap) on the wiki for planned features and known bugs.
 
-| Name                        | Required? | Default                   | Notes                                                                                                                      |
-| --------------------------- | --------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`              | **Yes**   | —                         | Postgres connection string: `ecto://user:pass@host/db`                                                                     |
-| `TZ`                        | No        | `UTC`                     | Must follow IANA TZ format                                                                                                 |
-| `POOL_SIZE`                 | No        | `10`                      | Postgres connection pool size                                                                                              |
-| `LOG_LEVEL`                 | No        | `debug`                   | Can be set to `info`                                                                                                       |
-| `UMASK`                     | No        | `022`                     | Unraid users may want `000`                                                                                                |
-| `BASIC_AUTH_USERNAME`       | No        | —                         | Enables basic auth when both username and password are set                                                                 |
-| `BASIC_AUTH_PASSWORD`       | No        | —                         | Enables basic auth when both username and password are set                                                                 |
-| `EXPOSE_FEED_ENDPOINTS`     | No        | `false`                   | See RSS feed docs                                                                                                          |
-| `ENABLE_IPV6`               | No        | `false`                   | Set to any non-blank value to enable                                                                                       |
-| `TZ_DATA_DIR`               | No        | `/etc/elixir_tzdata_data` | Container path for timezone database                                                                                       |
-| `BASE_ROUTE_PATH`           | No        | `/`                       | Base path for reverse proxy subdirectory deployments                                                                       |
-| `YT_DLP_WORKER_CONCURRENCY` | No        | `2`                       | yt-dlp workers per queue. Set to `1` if getting IP limited                                                                 |
-| `YT_DLP_VERSION`            | No        | `stable`                  | yt-dlp update behavior: `stable`, `nightly`, `master`, `pinned`/`none` to disable, or a specific version like `2025.12.08` |
-| `ENABLE_PROMETHEUS`         | No        | `false`                   | Set to any non-blank value to enable                                                                                       |
+## Documentation
 
-### Reverse Proxies
+- [Fork Changes](https://github.com/o51r15/pinchfork/wiki/Fork-Changes) — full breakdown of differences from upstream
+- [Discovery](https://github.com/o51r15/pinchfork/wiki/Discovery) — channel discovery feature guide
+- [Roadmap](https://github.com/o51r15/pinchfork/wiki/Roadmap) — planned features and version targets
+- [Upstream Wiki](https://github.com/kieraneglin/pinchflat/wiki) — media profiles, SponsorBlock, RSS feeds, Apprise, lifecycle scripts, Jellyfin/Plex/Kodi setup
 
-Pinchflat makes heavy use of websockets for real-time updates. Ensure your reverse proxy is configured to support websockets.
+## Requirements
 
----
+- Docker host with Docker Compose
+- ~1GB RAM for the app + Postgres
+- Storage for downloaded media
 
-## Configuration Differences from Upstream
+## Tech Stack
 
-For a full breakdown of env vars added/removed, new source and media item fields, and Oban behavior changes, see [Fork Changes — Configuration differences from upstream](https://github.com/o51r15/pinchfork/wiki/Fork-Changes#configuration-differences-from-upstream) on the wiki.
-
----
-
-## Upstream documentation
-
-The [upstream wiki](https://github.com/kieraneglin/pinchflat/wiki) covers features that have not changed in this fork: media profiles, SponsorBlock, RSS feeds, Apprise notifications, lifecycle scripts, and Jellyfin/Plex/Kodi setup. For anything related to the UI, source management, or features added in this fork, refer to the [Pinchfork wiki](https://github.com/o51r15/pinchfork/wiki) instead.
-
----
+Elixir 1.17+, Phoenix/LiveView, Ecto, Oban Pro, PostgreSQL 16, yt-dlp, Alpine (Docker)
 
 ## Contributors
 
-**[ddacunha](https://github.com/ddacunha)** — Contributed several improvements that were submitted as open PRs to the upstream project but not yet merged. Their work on the Oban Lifeline plugin, yt-dlp version management, queue diagnostics, and YouTube API key testing has been incorporated into this fork with attribution.
-
----
+**[ddacunha](https://github.com/ddacunha)** — Oban Lifeline plugin, yt-dlp version management, queue diagnostics, and YouTube API key testing. Contributed as open PRs to upstream; incorporated here with attribution.
 
 ## License
 
-See `LICENSE` file. This fork is also licensed under AGPL-3.0.
-
-Original project by [kieraneglin](https://github.com/kieraneglin).
+[AGPL-3.0](LICENSE) — Original project by [kieraneglin](https://github.com/kieraneglin).
