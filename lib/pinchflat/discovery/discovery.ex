@@ -28,6 +28,27 @@ defmodule Pinchflat.Discovery do
 
   Returns %DiscoverySuggestion{}. Raises `Ecto.NoResultsError` if not found.
   """
+
+  @doc """
+  Returns N random pending suggestions for display on the Discovery page.
+  """
+  def list_random_suggestions(count \\ 10) do
+    from(s in DiscoverySuggestion,
+      where: s.status == "pending",
+      order_by: fragment("RANDOM()"),
+      limit: ^count
+    )
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the total count of pending suggestions.
+  """
+  def pending_suggestion_count do
+    from(s in DiscoverySuggestion, where: s.status == "pending", select: count())
+    |> Repo.one()
+  end
+
   def get_suggestion!(id), do: Repo.get!(DiscoverySuggestion, id)
 
   @doc """

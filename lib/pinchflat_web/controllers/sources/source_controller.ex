@@ -146,11 +146,11 @@ defmodule PinchflatWeb.Sources.SourceController do
           cs_struct
           | id: nil,
             uuid: nil,
-            custom_name: nil,
+            custom_name: params["prefill_name"],
             description: nil,
             collection_name: nil,
             collection_id: nil,
-            collection_type: nil,
+            collection_type: params["prefill_type"],
             original_url: params["prefill_url"],
             marked_for_deletion_at: nil
         })

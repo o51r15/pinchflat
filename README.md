@@ -71,6 +71,7 @@ While you can download individual videos, Pinchflat is best suited for downloadi
 - SponsorBlock integration
 - Custom `yt-dlp` options support
 - Custom lifecycle scripts (alpha)
+- **Channel Discovery** — find new channels based on your existing library using heuristic scanning, with daily auto-scan and a dedicated Discovery page
 - **PostgreSQL backend** for reliable concurrent job processing
 
 ---

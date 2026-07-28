@@ -78,6 +78,12 @@ defmodule Pinchflat.Discovery.ScanWorker do
       persisted = persist_suggestions(scored, now)
       Logger.info("[Discovery] Scan complete — #{persisted} suggestions saved")
 
+      Phoenix.PubSub.broadcast(
+        Pinchflat.PubSub,
+        "discovery:scan",
+        {:scan_complete, %{persisted: persisted, validated: length(validated)}}
+      )
+
       {:ok, %{candidates: length(candidates), validated: length(validated), persisted: persisted}}
     end
   end
